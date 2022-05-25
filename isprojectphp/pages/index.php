@@ -4,7 +4,5 @@
     $readFile = new Read();
     $data = $readFile->getData();
 
-    foreach ($data as $d => $value) {
-        echo $d;
-    }
+    var_dump($data);
 ?>

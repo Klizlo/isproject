@@ -4,8 +4,8 @@
         private $data;
 
         function __construct(){
-            $response1 = file_get_contents('localhost:8090/games');
-            $this->data = json_decode($response1);
+            $response = file_get_contents('http://localhost:8090/games');
+            $this->data = json_decode($response);
         }
 
         function getData(){
