@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +26,10 @@ public class GameService {
         return gameRepository.findAll();
     }
 
+    public Game findSingleGame(Long id) {
+        return gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
+    }
+
     @Transactional
     public Game addGame(Game game) {
 
@@ -33,13 +37,28 @@ public class GameService {
                 .map(Tag::getName)
                 .collect(Collectors.toSet())).orElseThrow(TagNotFoundException::new);
 
-        game.setTags(new HashSet<>());
-
+        game.addTags(tags);
         gameRepository.save(game);
 
-        game.addTags(tags);
-
         return game;
+    }
+
+    @Transactional
+    public List<Game> addGamesFromFile(List<Game> games) {
+        List<Tag> allTags = tagsRepository.findAll();
+
+        for (Game g: games) {
+            Set<Tag> tagsForGame = allTags.stream()
+                    .filter(t -> g.getTags().stream()
+                            .map(Tag::getName)
+                            .anyMatch(t2 -> t2.equals(t.getName())))
+                    .collect(Collectors.toSet());
+
+            g.setTags(tagsForGame);
+            gameRepository.save(g);
+        }
+
+        return games;
     }
 
     @Transactional
@@ -58,9 +77,5 @@ public class GameService {
 
     public void deleteGame(Long id) {
         gameRepository.delete(gameRepository.findById(id).orElseThrow(GameNotFoundException::new));
-    }
-
-    public Game findSingleGame(Long id) {
-        return gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
     }
 }

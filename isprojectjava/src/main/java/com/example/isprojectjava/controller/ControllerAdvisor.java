@@ -1,6 +1,6 @@
 package com.example.isprojectjava.controller;
 
-import com.example.isprojectjava.exception.GameNotFoundException;
+import com.example.isprojectjava.exception.*;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,54 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
             GameNotFoundException ex, WebRequest request
     ){
         Map<String, Object> map = new LinkedHashMap<>();
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(TagNotFoundException.class)
+    public ResponseEntity<Object> tagNotFoundExceptionHandler(
+            TagNotFoundException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> userNotFoundExceptionHandler(
+            UserNotFoundException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<Object> roleNotFoundExceptionHandler(
+            RoleNotFoundException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidEmailException.class)
+    public ResponseEntity<Object> invalidEmailExceptionHandler(
+            InvalidEmailException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
         map.put("time:", LocalDateTime.now());
         map.put("msg:", ex.getMessage());
 
