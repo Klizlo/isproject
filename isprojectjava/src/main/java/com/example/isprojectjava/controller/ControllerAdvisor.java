@@ -1,7 +1,6 @@
 package com.example.isprojectjava.controller;
 
 import com.example.isprojectjava.exception.*;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -66,6 +65,30 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidEmailException.class)
     public ResponseEntity<Object> invalidEmailExceptionHandler(
             InvalidEmailException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IncorrectFileExtensionException.class)
+    public ResponseEntity<Object> incorrectFileExtensionExceptionHandler(
+            IncorrectFileExtensionException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ListOfGamesIsEmptyException.class)
+    public ResponseEntity<Object> listOfGamesISEmptyExceptionHandler(
+            ListOfGamesIsEmptyException ex, WebRequest request
     ){
         Map<String, Object> map = new LinkedHashMap<>();
 

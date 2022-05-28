@@ -3,8 +3,12 @@ package com.example.isprojectjava.controller;
 import com.example.isprojectjava.model.Game;
 import com.example.isprojectjava.service.GameService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,6 +30,28 @@ public class GameController {
         return gameService.findSingleGame(id);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/games/file/json")
+    public ResponseEntity<byte[]> getJSONFile(){
+        byte[] jsonFile = gameService.getJSONFile();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=games.json")
+                .contentType(MediaType.APPLICATION_JSON)
+                .contentLength(jsonFile.length)
+                .body(jsonFile);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/games/file/xml")
+    public ResponseEntity<byte[]> getXMLFile(){
+        byte[] xmlFile = gameService.getXMLFile();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=games.xml")
+                .contentType(MediaType.APPLICATION_XML)
+                .contentLength(xmlFile.length)
+                .body(xmlFile);
+    }
+
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/games")
     public Game addGame(@RequestBody Game game){
@@ -34,8 +60,14 @@ public class GameController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping("/games/list")
-    public List<Game> addGamesFromFile(@RequestBody List<Game> games){
-        return gameService.addGamesFromFile(games);
+    public List<Game> addListOfGames(@RequestBody List<Game> games){
+        return gameService.addListOfGames(games);
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping("/games/file")
+    public void addGamesFromFile(@RequestParam("file") MultipartFile multipartFile){
+        gameService.addGamesFromFile(multipartFile);
     }
 
     @PreAuthorize("hasRole('MANAGER')")
