@@ -12,21 +12,22 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@XmlRootElement(name = "tags")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Tag {
+public class Developer {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlElement
     private Long id;
+
     @Column(unique = true)
     @XmlElement
     private String name;
 
     @JsonIgnore
     @XmlTransient
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "developers")
     Set<Game> games = new HashSet<>();
 
     @Override
@@ -36,5 +37,4 @@ public class Tag {
                 "\"title\": \"" + name + "\"," +
                 "}";
     }
-
 }

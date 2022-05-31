@@ -25,16 +25,24 @@ public class Game {
     @XmlElement
     private Long id;
     @XmlElement
-    private String name;
+    private String title;
     @XmlElement
-    private Float rate;
+    private Long steamID;
     @XmlElement
-    private LocalDate release;
+    private Integer metacritic;
     @XmlElement
-    private String developer;
+    private LocalDate releaseDate;
     @XmlElement
-    private Long soldCopies;
-
+    private String price;
+    @XmlElement
+    private Integer requiredAge;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "game_developers", joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "developer_id"))
+    @XmlElement
+    private Set<Developer> developers = new HashSet<>();
+    @XmlElement
+    private Long currentPlayerCount;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(name = "game_tags", joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
@@ -46,12 +54,24 @@ public class Game {
         tags.stream().map(Tag::getGames).forEach(g -> g.add(this));
     }
 
+    public void addDevelopers(Set<Developer> developers) {
+        this.developers = developers;
+        developers.stream().map(Developer::getGames).forEach(g -> g.add(this));
+    }
+
     @Override
     public String toString() {
         return "{" +
-                "\"name\": \"" + name + "\"," +
-                "\"rate\": \"" + rate + "\"," +
-                "\"release\": \"" + release + "\"," +
+                "\"id\": " + id + "," +
+                "\"title\": \"" + title + "\"," +
+                "\"steamID\": " + steamID + "," +
+                "\"metacritic\": " + metacritic + "," +
+                "\"releaseDate\": \"" + releaseDate + "\"," +
+                "\"price\": \"" + price + "\"," +
+                "\"requiredAge\": " + requiredAge + "," +
+                "\"developers\": " + developers + "," +
+                "\"currentPlayerCount\": " + currentPlayerCount + "," +
+                "\"tags\": " + tags + "," +
                 "}";
     }
 }

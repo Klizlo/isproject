@@ -1,6 +1,7 @@
 package com.example.isprojectjava.controller;
 
 import com.example.isprojectjava.exception.*;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -34,6 +35,17 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         map.put("time:", LocalDateTime.now());
         map.put("msg", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DevelopersListIsEmptyException.class)
+    public ResponseEntity<Object> developersListIsEmptyExceptionHandler(
+            DevelopersListIsEmptyException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", ex.getMessage());
 
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }
@@ -82,6 +94,18 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
         map.put("time:", LocalDateTime.now());
         map.put("msg:", ex.getMessage());
+
+        return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FileUploadBase.SizeLimitExceededException.class)
+    public ResponseEntity<Object> sizeLimitExceededExceptionHandler(
+            FileUploadBase.SizeLimitExceededException ex, WebRequest request
+    ){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        map.put("time:", LocalDateTime.now());
+        map.put("msg:", "File size is too big");
 
         return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
     }

@@ -2,10 +2,8 @@ package com.example.isprojectjava.service;
 
 import com.example.isprojectjava.model.Game;
 import com.example.isprojectjava.model.xml.Games;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +23,7 @@ public class FileService {
 
     public List<Game> readJSONFile(MultipartFile multipartFile) {
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
         List<Game> games;
         try {
@@ -56,7 +54,7 @@ public class FileService {
     }
 
     public byte[] getJSONFile(List<Game> allGames) {
-        ObjectMapper objectWriter = new ObjectMapper();
+        ObjectMapper objectWriter = new ObjectMapper().findAndRegisterModules();
 
         String json = String.valueOf(allGames);
 
@@ -78,8 +76,6 @@ public class FileService {
         }
 
         String xml = writer.toString();
-
-        System.out.println(xml);
 
         return xml.getBytes();
     }

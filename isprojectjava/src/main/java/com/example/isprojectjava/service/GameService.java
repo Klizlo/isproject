@@ -1,11 +1,10 @@
 package com.example.isprojectjava.service;
 
-import com.example.isprojectjava.exception.GameNotFoundException;
-import com.example.isprojectjava.exception.IncorrectFileExtensionException;
-import com.example.isprojectjava.exception.ListOfGamesIsEmptyException;
-import com.example.isprojectjava.exception.TagNotFoundException;
+import com.example.isprojectjava.exception.*;
+import com.example.isprojectjava.model.Developer;
 import com.example.isprojectjava.model.Game;
 import com.example.isprojectjava.model.Tag;
+import com.example.isprojectjava.repository.DeveloperRepository;
 import com.example.isprojectjava.repository.GameRepository;
 import com.example.isprojectjava.repository.TagsRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ public class GameService {
 
     private final GameRepository gameRepository;
     private final TagsRepository tagsRepository;
+    private final DeveloperRepository developerRepository;
     private final FileService fileService;
 
     public List<Game> findAllGames() {
@@ -39,10 +40,17 @@ public class GameService {
 
         Set<Tag> tags = tagsRepository.findAllByNameIn(game.getTags().stream()
                 .map(Tag::getName)
-                .map(String::toUpperCase)
                 .collect(Collectors.toSet())).orElseThrow(TagNotFoundException::new);
 
+        Set<Developer> developers = new HashSet<>();
+
+        for (Developer d: game.getDevelopers()) {
+            d.setId(null);
+            developers.add(developerRepository.findByName(d.getName()).orElseGet(() -> developerRepository.save(d)));
+        }
+
         game.addTags(tags);
+        game.addDevelopers(developers);
         gameRepository.save(game);
 
         return game;
@@ -61,10 +69,18 @@ public class GameService {
             Set<Tag> tagsForGame = allTags.stream()
                     .filter(t -> g.getTags().stream()
                             .map(Tag::getName)
-                            .anyMatch(t2 -> t2 != null && t2.toUpperCase().equals(t.getName())))
+                            .anyMatch(t2 -> t2 != null && t2.equals(t.getName())))
                     .collect(Collectors.toSet());
 
+            Set<Developer> developers = new HashSet<>();
+
+            for (Developer d: g.getDevelopers()) {
+                d.setId(null);
+                developers.add(developerRepository.findByName(d.getName()).orElseGet(() -> developerRepository.save(d)));
+            }
+
             g.setTags(tagsForGame);
+            g.addDevelopers(developers);
             gameRepository.save(g);
         }
 
@@ -76,11 +92,9 @@ public class GameService {
 
         Game editedGame = gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
 
-        editedGame.setName(game.getName());
-        editedGame.setRate(game.getRate());
-        editedGame.setDeveloper(game.getDeveloper());
-        editedGame.setRelease(game.getRelease());
-        editedGame.setSoldCopies(game.getSoldCopies());
+        editedGame.setTitle(game.getTitle());
+        editedGame.setMetacritic(game.getMetacritic());
+        editedGame.setReleaseDate(game.getReleaseDate());
 
         return editedGame;
     }
@@ -109,4 +123,5 @@ public class GameService {
     public byte[] getXMLFile() {
         return fileService.getXMLFile(findAllGames());
     }
+
 }
