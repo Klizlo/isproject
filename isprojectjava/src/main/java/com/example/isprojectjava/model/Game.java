@@ -27,6 +27,7 @@ public class Game {
     @XmlElement
     private String title;
     @XmlElement
+    @Column(nullable = false, unique = true)
     private Long steamID;
     @XmlElement
     private Integer metacritic;
