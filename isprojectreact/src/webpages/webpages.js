@@ -2,55 +2,65 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Routes,
-    Route, Link
+    Route,
+    useNavigate
 } from "react-router-dom";
 
 import Games from './games';
 import Game from './game';
 import AddGame from "./addgame";
-import Variables from "../components/Globals/Variables";
 import Login from "./login";
+import UserContext from "../components/Globals/UserContext";
+
 
 const Webpages = () => {
-    console.log("Token:" + Variables.Token);
-    if(Variables.Token !== ""){
-        return (
-            <Router>
-                <Routes>
-                    <Route exact path="/games" element={<Games/>} />
-                    <Route path="/game/:id" element={<Game/>}/>
-                    <Route path="/addGame" element={<AddGame/>}/>
-                </Routes>
-            </Router>
-        );
-    } else {
-        return (
-            <Router>
-                <div className="App">
-                    <nav className="navbar navbar-expand-lg navbar-light fixed-top">
-                        <div className="container">
-                            <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
-                                <ul className="navbar-nav ml-auto">
-                                    <li className="nav-item">
-                                        <Link className="nav-link" to={'/sign-in'}>
-                                            Login
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </nav>
-                    <div className="auth-wrapper">
-                        <div className="auth-inner">
-                            <Routes>
-                                <Route exact path="/" element={<Login />} />
-                                <Route path="/sign-in" element={<Login />} />
-                            </Routes>
-                        </div>
-                    </div>
-                </div>
-            </Router>
-        )
+    const [token, setToken] = React.useState(null);
+    const [role, setRole] = React.useState(null);
+
+
+    const userValues = {
+        token: token,
+        role: role,
+        setRole,
+        setToken
     }
+
+    const Logout = () => {
+        userValues.setRole(null);
+        userValues.setToken(null);
+    }
+
+    console.log(userValues);
+    return (
+        <UserContext.Provider value={userValues}>
+            <>
+                <Router>
+                    <Navigation/>
+                    {userValues.token ? (
+                        <button onClick={Logout}>Wyloguj</button>
+                    ) : (
+                        <button onClick={Login}>Zaloguj</button>
+                    )}
+                    <Routes>
+                        <Route exact path="/" element={<Login/>}/>
+                        <Route path="/sign-in" element={<Login/>}/>
+                        <Route path="/games" element={<Games/>}/>
+                        <Route path="/game/:id" element={<Game/>}/>
+                        <Route path="/addGame" element={<AddGame/>}/>
+                    </Routes>
+                </Router>
+            </>
+        </UserContext.Provider>
+    );
 };
+
+const Navigation = () => {
+    const navigate = useNavigate();
+    return (
+        <nav>
+            <button onClick={navigate("/games")}>Wszystkie gry</button>
+            <button onClick={navigate("/addGame")}>Dodaj gre</button>
+        </nav>);
+};
+
 export default Webpages;

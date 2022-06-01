@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {useParams} from "react-router-dom";
 import Variables from "../components/Globals/Variables";
+import userContext from "../components/Globals/UserContext";
 
 
 const Game = () => {
@@ -9,11 +10,12 @@ const Game = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [game, setGame] = useState([]);
     const endpoint = Variables.API + "/games/" + id;
+    const user = useContext(userContext);
     useEffect(() => {
         fetch(endpoint, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBhZG1pbi5lZHUiLCJyb2xlcyI6IlJPTEVfQURNSU4sUk9MRV9NQU5BR0VSLFJPTEVfVVNFUiIsImlhdCI6MTY1NDAwMjE3OSwiZXhwIjoxNjU0MDIwMTc5fQ.CsxrKqrcr6N7ayJshodMph64c2kSDALOdzjlkf7EmWE"
+                'Authorization': 'Bearer ' + user.token
             })
         })
             .then(res => res.json())

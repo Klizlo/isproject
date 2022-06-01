@@ -1,8 +1,9 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 import React from "react";
 
 
 const AddGame = () => {
+
     const [isPosted, setIsPosted] = useState(false);
 
     if (!isPosted) {

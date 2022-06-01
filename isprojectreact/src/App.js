@@ -1,12 +1,14 @@
-
 import './App.css';
 import Webpages from "./webpages/webpages";
+import {Suspense} from "react";
 
 function App() {
     return (
-        <div className="container">
-            <Webpages />
-        </div>
+        <Suspense fallback={<div>Loading</div>}>
+            <div className="container">
+                <Webpages/>
+            </div>
+        </Suspense>
     );
 }
 
