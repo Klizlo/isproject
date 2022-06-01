@@ -1,6 +1,8 @@
 package com.example.isprojectjava.controller;
 
 import com.example.isprojectjava.model.Game;
+import com.example.isprojectjava.model.dto.GameDTO;
+import com.example.isprojectjava.model.dto.GamesDTOMapper;
 import com.example.isprojectjava.service.GameService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,12 @@ public class GameController {
     @GetMapping("/games")
     public List<Game> findAllGames(){
         return gameService.findAllGames();
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/games/general")
+    public List<GameDTO> findAllGeneralGames(){
+        return GamesDTOMapper.mapToGameDtos(gameService.findAllGames());
     }
 
     @PreAuthorize("hasRole('USER')")
