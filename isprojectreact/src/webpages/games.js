@@ -35,10 +35,16 @@ const Games = () => {
     } else if (!isLoaded) {
         return <div>Pobieram dane...</div>;
     } else {
+        games.map((game) => {
+            if(!game.price){
+                game.price = "free";
+            }
+        })
+        console.log(games);
         return (
             <div className={"table_container"}>
                 <h1>Tabela gier</h1>
-                {/*<GamesTable games={games}/>*/}
+                <GamesTable games={games}/>
             </div>
         );
     }

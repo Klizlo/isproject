@@ -38,25 +38,35 @@ const Game = () => {
     }
 
     if (game) {
+        console.log(game);
         return (
-
             <table>
                 <tr>
-                    <th>Tytuł gry</th>
                     <th>Unikalny ID</th>
-                    <th>Ocena</th>
-                    <th>Deweloper</th>
-                    <th>Wydano w</th>
-                    <th>Sprzedane kopie</th>
+                    <th>Tytuł gry</th>
+                    <th>SteamID</th>
+                    <th>Ocena metacritic</th>
+                    <th>Data wydania</th>
+                    <th>Deweloperzy</th>
+                    <th>Obecna liczba graczy</th>
+                    <th>Wymagania wiekowe</th>
                     <th>Tagi</th>
+                    <th>Cena</th>
                 </tr>
                 <tr>
-                    <th>{game.name}</th>
                     <th>{game.id}</th>
-                    <th>{game.rate}</th>
-                    <th>{game.developer}</th>
-                    <th>{game.release}</th>
-                    <th>{game.soldCopies}</th>
+                    <th>{game.title}</th>
+                    <th>{game.steamID}</th>
+                    <th>{game.metacritic}</th>
+                    <th>{game.releaseDate}</th>
+                    <th>{game.developers.map((developer) => {
+                        return(
+                            <li>{developer.name}</li>
+                        )
+                    })}</th>
+
+                    <th>{game.currentPlayerCount}</th>
+                    <th>{game.requiredAge}</th>
                     <th>{game.tags && game.tags.map((tag) => {
                         return (
                             <ul>
@@ -64,6 +74,7 @@ const Game = () => {
                             </ul>
                         )
                     })}</th>
+                    <th>{game.price}</th>
                 </tr>
             </table>
         );
