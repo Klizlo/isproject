@@ -14,8 +14,7 @@ public class GameDTO {
     private Long steamID;
     private Integer metacritic;
     private LocalDate releaseDate;
-    private String price;
-    private Integer requiredAge;
     private Long currentPlayerCount;
+    private String price;
 
 }
