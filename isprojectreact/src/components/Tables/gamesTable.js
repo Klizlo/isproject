@@ -1,30 +1,23 @@
-import { useState } from "react";
-import GamesTableHead from "./gamesTableHead";
-import GamesTableBody from "./gamesTableBody";
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
-const GamesTable = (games) => {
-    const [tableData, setTableData] = useState(games)
+const columns = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'title', headerName: 'Nazwa gry', width: 130 },
+    { field: 'steamID', headerName: 'SteamID', width: 70 },
+    { field: 'metacritic', headerName: 'Ocena metacritic', width: 70 },
+    { field: 'currentPlayerCount', headerName: 'Obecna liczba graczy', width: 250 },
+    { field: 'price', headerName: 'Cena', width: 70 }
+];
 
-
-    const columns = [
-        { label: "Tytuł gry", accessor: "name", sortable: false },
-        { label: "ID", accessor: "id", sortable: true },
-        { label: "Ocena", accessor: "rate", sortable: true },
-        { label: "Deweloper", accessor: "developer", sortable: false },
-        { label: "Wydano w", accessor: "release", sortable: true },
-        { label: "Sprzedane kopie", accessor: "soldCopies", sortable: true },
-        { label: "Tagi", accessor: "tags", sortable: false },
-        { label: "Opcje", accessor: "settings", sortable: false },
-    ];
-
-    return (
-        <>
-            <table className="table">
-                <GamesTableHead columns={columns} />
-                <GamesTableBody columns={columns} tableData={tableData.games} />
-            </table>
-        </>
-    );
-};
-
-export default GamesTable;
+const GamesTable = gamesData => (
+    <div style={{height: 400, width: '100%'}}>
+        <DataGrid
+            rows={gamesData}
+            columns={columns}
+            pageSize={20}
+            rowsPerPageOptions={[20]}
+        />
+    </div>
+);
+export default GamesTable

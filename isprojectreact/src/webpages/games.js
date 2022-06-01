@@ -1,14 +1,15 @@
 import React, {useState, useEffect, useContext} from 'react';
 import GamesTable from "../components/Tables/gamesTable";
 import Variables from "../components/Globals/Variables";
+import userContext from "../components/Globals/UserContext";
 
 
 const Games = () => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [games, setGames] = useState([]);
-    const endpoint = Variables.API + "/games";
-    const user = useContext(useContext());
+    const endpoint = Variables.API + "/games/general";
+    const user = useContext(userContext);
     useEffect(() => {
         fetch(endpoint, {
             method: 'GET',
@@ -20,6 +21,7 @@ const Games = () => {
             .then(
                 (data) => {
                     setIsLoaded(true);
+                    console.log(data);
                     setGames(data);
                 },
                 (error) => {
@@ -36,7 +38,7 @@ const Games = () => {
         return (
             <div className={"table_container"}>
                 <h1>Tabela gier</h1>
-                <GamesTable games={games}/>
+                {/*<GamesTable games={games}/>*/}
             </div>
         );
     }
