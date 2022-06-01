@@ -1,14 +1,19 @@
 import './App.css';
 import Webpages from "./webpages/webpages";
-import {Suspense} from "react";
+import {ThemeProvider, createTheme} from "@mui/material";
+
+const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+    },
+});
 
 function App() {
+
     return (
-        <Suspense fallback={<div>Loading</div>}>
-            <div className="container">
-                <Webpages/>
-            </div>
-        </Suspense>
+        <ThemeProvider theme={darkTheme}>
+            <main><Webpages/></main>
+        </ThemeProvider>
     );
 }
 

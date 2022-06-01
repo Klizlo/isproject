@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {Button, ButtonGroup} from "@mui/material";
+import {AppBar, Button, ButtonGroup} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
 const NavBar = (sites) => {
@@ -8,7 +8,7 @@ const NavBar = (sites) => {
 
     const navigate = useNavigate();
     return (
-        <Box sx={{width: '100%'}}>
+        <Box sx={{width: '100%', bgcolor: "gray"}}>
             <ButtonGroup variant="outlined" aria-label="outlined button group">
                 {sites.sites.map((site) => {
                     if (site.visible) {
@@ -20,6 +20,11 @@ const NavBar = (sites) => {
                         );
                     }
                 })}
+                <Button key={"logIn"} onClick={() => {
+                    navigate("/")
+                }}>
+                    Logowanie
+                </Button>
             </ButtonGroup>
         </Box>
     );

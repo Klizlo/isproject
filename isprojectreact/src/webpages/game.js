@@ -2,6 +2,9 @@ import React, {useState, useEffect, useContext} from 'react';
 import {useParams} from "react-router-dom";
 import Variables from "../components/Globals/Variables";
 import userContext from "../components/Globals/UserContext";
+import {Box, Card, CardContent, Grid, List, ListItem, ListItemText, Typography} from "@mui/material";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import FolderIcon from "@mui/icons-material/Folder";
 
 
 const Game = () => {
@@ -37,46 +40,95 @@ const Game = () => {
         return <div>Loading...</div>;
     }
 
+
     if (game) {
+        if (!game.price) {
+            game.price = "free";
+        }
         console.log(game);
         return (
-            <table>
-                <tr>
-                    <th>Unikalny ID</th>
-                    <th>Tytuł gry</th>
-                    <th>SteamID</th>
-                    <th>Ocena metacritic</th>
-                    <th>Data wydania</th>
-                    <th>Deweloperzy</th>
-                    <th>Obecna liczba graczy</th>
-                    <th>Wymagania wiekowe</th>
-                    <th>Tagi</th>
-                    <th>Cena</th>
-                </tr>
-                <tr>
-                    <th>{game.id}</th>
-                    <th>{game.title}</th>
-                    <th>{game.steamID}</th>
-                    <th>{game.metacritic}</th>
-                    <th>{game.releaseDate}</th>
-                    <th>{game.developers.map((developer) => {
-                        return(
-                            <li>{developer.name}</li>
-                        )
-                    })}</th>
-
-                    <th>{game.currentPlayerCount}</th>
-                    <th>{game.requiredAge}</th>
-                    <th>{game.tags && game.tags.map((tag) => {
-                        return (
-                            <ul>
-                                <li key={tag.id}>{tag.name}</li>
-                            </ul>
-                        )
-                    })}</th>
-                    <th>{game.price}</th>
-                </tr>
-            </table>
+            <Card sx={{minWidth: 300}}>
+                <CardContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <Typography variant={"h4"} color={"text.secondary"} gutterBottom>
+                                {game.title}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 12}} color={"text.secondary"}>
+                                DataBaseID: {game.id}
+                            </Typography>
+                            <Typography sx={{fontSize: 12}} color={"text.secondary"}>
+                                SteamID: {game.steamID}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{mt: 1, mb: 1}}
+                                        variant="h6"
+                                        color={"text.secondary"}
+                                        component="div">
+                                Deweloperzy:
+                            </Typography>
+                            <List dense={true}>
+                                {game.developers.map((developer) => {
+                                    return (
+                                        <ListItem>
+                                            <ListItemText secondary={developer.name}/>
+                                        </ListItem>
+                                    )
+                                })}
+                            </List>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{mt: 1, mb: 1}}
+                                        variant="h6"
+                                        color={"text.secondary"}
+                                        component="div">
+                                Tagi:
+                            </Typography>
+                            <List dense={true}>
+                                {game.tags.map((tag) => {
+                                    return (
+                                        <ListItem>
+                                            <ListItemText secondary={tag.name}/>
+                                        </ListItem>
+                                    )
+                                })}
+                            </List>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 20}} color={"text.secondary"} gutterBottom>
+                                Obecna Liczba graczy: {game.currentPlayerCount}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 20}} color={"text.secondary"} gutterBottom>
+                                Ocena metacritic: [{game.metacritic}/100]
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 20}} color={"text.secondary"} gutterBottom>
+                                Cena: {game.price}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 20}} color={"text.secondary"} gutterBottom>
+                                Data wydania: {game.releaseDate}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Typography sx={{fontSize: 20}} color={"text.secondary"} gutterBottom>
+                                Wymagany wiek: {game.requiredAge}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
         );
     }
 }
