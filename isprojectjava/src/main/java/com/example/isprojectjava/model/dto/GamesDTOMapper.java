@@ -12,16 +12,17 @@ public class GamesDTOMapper {
 
     public static List<GameDTO> mapToGameDtos(List<Game> games){
         return games.stream()
-                .map(game -> mapToPostDto(game))
+                .map(game -> mapToGameDto(game))
                 .collect(Collectors.toList());
     }
 
-    private static GameDTO mapToPostDto(Game game){
+    private static GameDTO mapToGameDto(Game game){
         return GameDTO.builder()
                 .id(game.getId())
                 .title(game.getTitle())
                 .steamID(game.getSteamID())
                 .metacritic(game.getMetacritic())
+                .releaseDate(game.getReleaseDate())
                 .currentPlayerCount(game.getCurrentPlayerCount())
                 .price(game.getPrice())
                 .build();
