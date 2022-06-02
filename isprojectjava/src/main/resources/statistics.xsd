@@ -4,7 +4,13 @@
            targetNamespace="http://example.com/isprojectjava/model/soap"
            elementFormDefault="qualified">
 
-    <xs:element name="getStatisticsRequest"/>
+    <xs:element name="getStatisticsRequest">
+        <xs:complexType>
+            <xs:sequence>
+
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
     <xs:element name="getStatisticsResponse">
         <xs:complexType>
@@ -16,40 +22,16 @@
 
     <xs:complexType name="statistics">
         <xs:sequence>
-            <xs:element name="numberOfPlayersByTag" type="tns:numberOfPlayersByTag"/>
-            <xs:element name="numberOfGamesByPrice" type="tns:numberOfGamesByPrice"/>
-            <xs:element name="numberOfGamesByYear" type="tns:numberOfGamesByYear"/>
+            <xs:element name="numberOfPlayersByTag" maxOccurs="unbounded" type="tns:Statistic"/>
+            <xs:element name="numberOfGamesByPrice" maxOccurs="unbounded" type="tns:Statistic"/>
+            <xs:element name="numberOfGamesByYear" maxOccurs="unbounded" type="tns:Statistic"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="numberOfPlayersByTag">
+    <xs:complexType name="Statistic">
         <xs:sequence>
-            <xs:element name="numberOfPlayersByTag" type="tns:statisticMapModeller" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="numberOfGamesByPrice">
-        <xs:sequence>
-            <xs:element name="numberOfGamesByPrice" type="tns:statisticMapModeller" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="numberOfGamesByYear">
-        <xs:sequence>
-            <xs:element name="numberOfGamesByYear" type="tns:statisticMapModeller" minOccurs="0"/>
-        </xs:sequence>
-    </xs:complexType>
-
-    <xs:complexType name="statisticMapModeller">
-        <xs:sequence>
-            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="key" type="xs:string"/>
-                        <xs:element name="value" type="xs:float"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="key" type="xs:string"/>
+            <xs:element name="value" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>
