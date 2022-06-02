@@ -11,12 +11,39 @@ import Game from './game';
 import AddGame from "./addgame";
 import Login from "./login";
 import UserContext from "../components/Globals/UserContext";
+import NavBar from "../components/Navigation/navBar";
 
 
 const Webpages = () => {
     const [token, setToken] = React.useState(null);
     const [role, setRole] = React.useState(null);
 
+    //Tablica stron
+    const sites = [
+        //name: Nazwa na NavBar
+        //link: Link do strony
+        //visible: Czy widoczne
+        {
+            name: "Lista Gier",
+            link: "/games",
+            visible: true
+        },
+        {
+            name: "Statystyki Gier",
+            link: "/gamesStats",
+            visible: false
+        },
+        {
+            name: "Dodaj gre",
+            link: "/addGame",
+            visible: false
+        },
+        {
+            name: "Dodaj Użytkownika",
+            link: "/addGame",
+            visible: false
+        },
+    ];
 
     const userValues = {
         token: token,
@@ -25,25 +52,21 @@ const Webpages = () => {
         setToken
     }
 
+
+
     const Logout = () => {
+        sites.map((site) => site.visible = false)
         userValues.setRole(null);
         userValues.setToken(null);
     }
 
-    console.log(userValues);
     return (
         <UserContext.Provider value={userValues}>
             <>
                 <Router>
-                    <Navigation/>
-                    {userValues.token ? (
-                        <button onClick={Logout}>Wyloguj</button>
-                    ) : (
-                        <button onClick={Login}>Zaloguj</button>
-                    )}
+                    <NavBar sites={sites}/>
                     <Routes>
                         <Route exact path="/" element={<Login/>}/>
-                        <Route path="/sign-in" element={<Login/>}/>
                         <Route path="/games" element={<Games/>}/>
                         <Route path="/game/:id" element={<Game/>}/>
                         <Route path="/addGame" element={<AddGame/>}/>
@@ -54,13 +77,5 @@ const Webpages = () => {
     );
 };
 
-const Navigation = () => {
-    const navigate = useNavigate();
-    return (
-        <nav>
-            <button onClick={navigate("/games")}>Wszystkie gry</button>
-            <button onClick={navigate("/addGame")}>Dodaj gre</button>
-        </nav>);
-};
 
 export default Webpages;

@@ -3,14 +3,14 @@ import Variables from "../components/Globals/Variables";
 import {Alert} from "@mui/material";
 import jwtDecode from "jwt-decode";
 import userContext from "../components/Globals/UserContext";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
 
+    const naviagte = useNavigate();
     const user = useContext(userContext);
     const [error, setError] = useState(null);
     const [isError, setIsError] = useState(false);
-
-
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -28,12 +28,12 @@ const Login = () => {
             .then(res => res.json())
             .then(
                 (data) => {
-                    console.log(jwtDecode(data.token).roles);
                     const jwt = jwtDecode(data.token).roles;
                     const rolesList = jwt.split(",")
                     user.setToken(data.token);
                     user.setRole(rolesList)
                     setIsError(false);
+                    naviagte("/games")
                 },
                 (error) => {
                     setError(error);
