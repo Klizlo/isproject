@@ -28,6 +28,12 @@ public class GameController {
     }
 
     @PreAuthorize("hasRole('USER')")
+    @GetMapping("/games/steamids")
+    public List<Long> findAllSteamIDs(){
+        return gameService.findAllSteamIDs();
+    }
+
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/games/general")
     public List<GameDTO> findAllGeneralGames(){
         return GamesDTOMapper.mapToGameDtos(gameService.findAllGames());

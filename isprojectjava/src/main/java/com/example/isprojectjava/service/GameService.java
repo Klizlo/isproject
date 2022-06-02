@@ -129,4 +129,7 @@ public class GameService {
         return fileService.getXMLFile(findAllGames());
     }
 
+    public List<Long> findAllSteamIDs() {
+        return gameRepository.findAllSteamIDs();
+    }
 }
