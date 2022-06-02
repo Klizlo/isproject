@@ -95,6 +95,11 @@ public class GameService {
         editedGame.setTitle(game.getTitle());
         editedGame.setMetacritic(game.getMetacritic());
         editedGame.setReleaseDate(game.getReleaseDate());
+        editedGame.setPrice(game.getPrice());
+        editedGame.setRequiredAge(game.getRequiredAge());
+        editedGame.setCurrentPlayerCount(game.getCurrentPlayerCount());
+        editedGame.setDevelopers(game.getDevelopers());
+        editedGame.setTags(game.getTags());
 
         return editedGame;
     }
