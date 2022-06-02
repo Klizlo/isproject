@@ -100,6 +100,8 @@ const EditGame = () => {
                 autoComplete="off"
             >
                 <Grid
+                    marginLeft={"auto"}
+                    marginRight={"auto"}
                     p={2}
                     border={2}
                     borderColor={"dimgrey"}
