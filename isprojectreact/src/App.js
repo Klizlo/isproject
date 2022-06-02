@@ -1,6 +1,6 @@
 import './App.css';
 import Webpages from "./webpages/webpages";
-import {ThemeProvider, createTheme} from "@mui/material";
+import {ThemeProvider, createTheme, Box} from "@mui/material";
 
 const darkTheme = createTheme({
     palette: {
