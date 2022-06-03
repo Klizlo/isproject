@@ -1,19 +1,20 @@
-import React, {useContext, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import Variables from "../components/Globals/Variables";
-import {Alert} from "@mui/material";
+import {Alert, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import jwtDecode from "jwt-decode";
-import userContext from "../components/Globals/UserContext";
 import {useNavigate} from "react-router-dom";
 
 const Login = () => {
 
-    const naviagte = useNavigate();
-    const user = useContext(userContext);
+    const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [isError, setIsError] = useState(false);
+    const [login, setLogin] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [token, setToken] = useState(null);
+    const [role, setRole] = useState(null);
 
-    const onSubmit = (event) => {
-        event.preventDefault();
+    const handleLogin = () => {
         fetch(Variables.API + "/login", {
             method: 'Post',
             headers: {
@@ -21,8 +22,8 @@ const Login = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username: event.target.login.value,
-                password: event.target.password.value
+                username: login,
+                password: password
             })
         })
             .then(res => res.json())
@@ -30,51 +31,107 @@ const Login = () => {
                 (data) => {
                     const jwt = jwtDecode(data.token).roles;
                     const rolesList = jwt.split(",")
-                    user.setToken(data.token);
-                    user.setRole(rolesList)
+                    setToken(data.token);
+                    setRole(rolesList)
                     setIsError(false);
-                    naviagte("/games")
                 },
                 (error) => {
                     setError(error);
                     setIsError(true);
                 }
             )
+
+    }
+
+
+    useEffect(() => {
+        // storing input name
+        localStorage.setItem("token", JSON.stringify(token));
+    }, [token]);
+    useEffect(() => {
+        // storing input name
+        localStorage.setItem("role", JSON.stringify(role));
+    }, [role]);
+
+    if(token && role){
+        navigate("/games")
     }
 
     return (
-        <form onSubmit={onSubmit}>
-            <h3>Logowanie</h3>
-            <div className="mb-3">
-                <label>Login</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Podaj Login"
-                    name={"login"}
-                />
-            </div>
-            <div className="mb-3">
-                <label>Hasło</label>
-                <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Podaj Hasło"
-                    name={"password"}
-                />
-            </div>
-            <div className="d-grid">
-                <button type="submit" className="btn btn-primary">
-                    Zaloguj
-                </button>
-            </div>
-            <div>
-                {
-                    isError ? <Alert severity={"error"}>{error.message}</Alert> : <></>
-                }
-            </div>
-        </form>
-    );
+        <Box
+            component="form"
+            sx={{
+                width: 1,
+                bgcolor: "background.default"
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            <Grid
+                marginLeft={"auto"}
+                marginRight={"auto"}
+                p={2}
+                border={2}
+                borderColor={"dimgrey"}
+                borderRadius={"12px"}
+                container
+                direction={"column"}
+                justifyContent={"space-between"}
+                alignSelf={"center"}
+                alignItems={"center"}
+                bgcolor={'action.hover'}
+                width={'80%'}
+            >
+                <Grid item my={2}>
+                    <Typography sx={{fontSize: 35, fontWeight: 'bold'}} color={"text.secondary"} gutterBottom>
+                        Witaj na naszej stronie
+                    </Typography>
+                </Grid>
+                <Grid item my={2}>
+                    <TextField
+                        id="login"
+                        label="Login"
+                        variant="outlined"
+                        placeholder="Podaj Login"
+                        onChange={(e) => {
+                            setLogin(e.target.value);
+                        }}
+                    />
+                </Grid>
+                <Grid item my={2}>
+                    <TextField
+                        id="password"
+                        label="Hasło"
+                        variant="outlined"
+                        placeholder="Podaj hasło"
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                        }}
+                    />
+                </Grid>
+
+                <Grid item my={2}>
+                    <Button
+                        key="login-button"
+                        variant={'contained'}
+                        color={"success"}
+                        onClick={() => {
+                            handleLogin()
+                        }}
+                    >
+                        Zaloguj
+                    </Button>
+                </Grid>
+                <Grid item my={2}>
+                    {isError ? (
+                        <Alert severity={"error"}>Podano złe dane logowania</Alert>
+                    ) : (
+                        <div></div>
+                    )}
+                </Grid>
+            </Grid>
+        </Box>
+);
 }
 
 export default Login;

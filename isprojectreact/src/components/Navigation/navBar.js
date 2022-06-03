@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box';
 import {Button, ButtonGroup} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import React, {useContext} from 'react';
-import userContext from "../Globals/UserContext";
+import React from 'react';
+import {useLocalStorage} from "../LocalStorageHandler/HandleLocalStorage";
 
 const NavBar = (sites) => {
-    const user = useContext(userContext);
+    const [token, setToken] = useLocalStorage("token", null);
     const navigate = useNavigate();
     return (
         <Box sx={{
@@ -30,14 +30,12 @@ const NavBar = (sites) => {
                         );
                     }
                 })}
-                {user.token ? (
+                {token ? (
                     <Button
                         variant={'contained'}
                         color={"warning"}
-                        key={"logIn"}
+                        key={"logOut"}
                         onClick={() => {
-                        user.token = null;
-                        user.role = null
                         navigate("/")
                     }}>
                         Wyloguj
@@ -45,11 +43,11 @@ const NavBar = (sites) => {
                 ) : (
                     <Button
                         variant={'contained'}
-                        color={"success"}
+                        color={"warning"}
                         key={"logIn"}
                         onClick={() => {
-                        navigate("/")
-                    }}>
+                            navigate("/")
+                        }}>
                         Logowanie
                     </Button>
                 )}

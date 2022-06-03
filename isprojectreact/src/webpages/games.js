@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import GamesTable from "../components/Tables/gamesTable";
 import Variables from "../components/Globals/Variables";
-import userContext from "../components/Globals/UserContext";
+import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
 
 
 const Games = () => {
@@ -9,12 +9,12 @@ const Games = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [games, setGames] = useState([]);
     const endpoint = Variables.API + "/games/general";
-    const user = useContext(userContext);
+    const [token, setToken] = useLocalStorage("token", null);
     useEffect(() => {
         fetch(endpoint, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer ' + user.token
+                'Authorization': 'Bearer ' + token
             })
         })
             .then(res => res.json())

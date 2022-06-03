@@ -1,10 +1,9 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import Variables from "../components/Globals/Variables";
 import {
     Box,
-    Card,
-    CardContent, Checkbox, Divider, Fab,
+    Checkbox, Fab,
     Grid,
     List,
     ListItem,
@@ -13,7 +12,7 @@ import {
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
-import UserContext from "../components/Globals/UserContext";
+import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
 
 
 const initialGames = {
@@ -51,9 +50,18 @@ const EditGame = () => {
     const [tags, setTags] = useState(null);
     const [open, setOpen] = useState(false);
     const endpoint = Variables.API + "/games/" + id;
-    const user = useContext(UserContext);
+    const [token, setToken] = useLocalStorage("token", null);
+    const [currentPlayerCount, setCurrentPlayerCount] = useState(null);
+    const [developers, setDevelopers] = useState(null);
+    const [metacritic, setMetacritic] = useState(null);
+    const [price, setPrice] = useState(null);
+    const [releaseDate, setReleaseDate] = useState(null);
+    const [requiredAge, setRequiredAge] = useState(null);
+    const [steamID, setSteamID] = useState(null);
+    const [title, setTitle] = useState(null);
 
-    const [checked, setChecked] = React.useState([]);
+
+    const [checked, setChecked] = useState([]);
 
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
@@ -64,21 +72,41 @@ const EditGame = () => {
         } else {
             newChecked.splice(currentIndex, 1);
         }
-
         setChecked(newChecked);
-        console.log(checked);
     };
 
     const handleAdding = () => {
-        setGame(initialGames);
-        setOpen(true);
+        console.log(title);
+        console.log(steamID);
+        console.log(requiredAge);
+        console.log(releaseDate);
+        console.log(price);
+        console.log(metacritic);
+        console.log(developers);
+        console.log(currentPlayerCount);
+        let tagsToDB = [];
+        checked.map((c) => {
+            tags.map((tag) => {
+                if(tag.id === c){
+                    tagsToDB.push(tag.name);
+                }
+            })
+        })
+        console.log(tagsToDB);
+        const developersToDB = developers.split(';');
+        if(developersToDB.includes('')){
+            developersToDB.pop();
+        }
+        console.log(developersToDB);
+
+        //setOpen(true);
     }
 
     useEffect(() => {
         fetch(endpoint, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer ' + user.token
+                'Authorization': 'Bearer ' + token
             })
         })
             .then(res => res.json())
@@ -96,7 +124,7 @@ const EditGame = () => {
         fetch(Variables.API + "/tags", {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer ' + user.token
+                'Authorization': 'Bearer ' + token
             })
         })
             .then(res => res.json())
@@ -151,33 +179,93 @@ const EditGame = () => {
                     width={'80%'}
                 >
                     <Grid item my={2}>
-                        <TextField id="title" label="Tytuł gry" variant="outlined" placeholder={game.title}/>
+                        <TextField
+                            id="title"
+                            label="Tytuł gry"
+                            variant="outlined"
+                            placeholder={game.title}
+                            onChange={(e) => {
+                                setTitle(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="steamID" label="SteamID" variant="outlined" placeholder={game.steamID}/>
+                        <TextField
+                            id="steamID"
+                            label="SteamID"
+                            variant="outlined"
+                            placeholder={game.steamID}
+                            onChange={(e) => {
+                                setSteamID(e.target.value);
+                            }}
+                        />
                     </Grid>
 
                     <Grid item my={2}>
-                        <TextField id="metacritic" label="Metacritic" variant="outlined"
-                                   placeholder={game.metacritic}/>
+                        <TextField
+                            id="metacritic"
+                            label="Metacritic"
+                            variant="outlined"
+                            placeholder={game.metacritic}
+                            onChange={(e) => {
+                                setMetacritic(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="price" label="Cena" variant="outlined" placeholder={game.price}/>
+                        <TextField
+                            id="price"
+                            label="Cena"
+                            variant="outlined"
+                            placeholder={game.price}
+                            onChange={(e) => {
+                                setPrice(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="releaseDate" label="Data wydania" variant="outlined"
-                                   placeholder={game.releaseDate}/>
+                        <TextField
+                            id="releaseDate"
+                            label="Data wydania"
+                            variant="outlined"
+                            placeholder={game.releaseDate}
+                            onChange={(e) => {
+                                setReleaseDate(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="requiredAge" label="Ograniczenia wiekowe" variant="outlined"
-                                   placeholder={game.requiredAge}/>
+                        <TextField
+                            id="requiredAge"
+                            label="Ograniczenia wiekowe"
+                            variant="outlined"
+                            placeholder={game.requiredAge}
+                            onChange={(e) => {
+                                setRequiredAge(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="currentPlayerCount" label="Obecna liczba graczy" variant="outlined"
-                                   placeholder={game.currentPlayerCount}/>
+                        <TextField
+                            id="currentPlayerCount"
+                            label="Obecna liczba graczy"
+                            variant="outlined"
+                            placeholder={game.currentPlayerCount}
+                            onChange={(e) => {
+                                setCurrentPlayerCount(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="title" label="Deweloperzy" variant="outlined" placeholder={devs}/>
+                        <TextField
+                            id="title"
+                            label="Deweloperzy"
+                            variant="outlined"
+                            placeholder={devs}
+                            onChange={(e) => {
+                                setDevelopers(e.target.value);
+                            }}
+                        />
                     </Grid>
                     <List
                         sx={{
@@ -235,7 +323,7 @@ const EditGame = () => {
                 <Modal
                     open={open}
                     onClose={() => {
-                        navigate("/games")
+                        setOpen(false);
                     }}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"

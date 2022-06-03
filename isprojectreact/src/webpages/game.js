@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import UserContext from "../components/Globals/UserContext";
+import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
 
 const MetacriticBox = (value) => {
     if (!value) {
@@ -94,13 +94,13 @@ const Game = () => {
     const [game, setGame] = useState(ininitialGames);
     const [open, setOpen] = useState(false);
     const endpoint = Variables.API + "/games/" + id;
-    const user = useContext(UserContext);
+    const [token, setToken] = useLocalStorage("token", null);
 
     const handleDelete = () =>{
         fetch(Variables.API + "/games/" + id, {
             method: 'DELETE',
             headers: new Headers({
-                'Authorization': 'Bearer ' + user.token
+                'Authorization': 'Bearer ' + token
             })
         })
             .then(() => setIsDeleted(true));
@@ -113,7 +113,7 @@ const Game = () => {
         fetch(endpoint, {
             method: 'GET',
             headers: new Headers({
-                'Authorization': 'Bearer ' + user.token
+                'Authorization': 'Bearer ' + token
             })
         })
             .then(res => res.json())

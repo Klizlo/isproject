@@ -2,22 +2,21 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Routes,
-    Route,
-    useNavigate
+    Route
 } from "react-router-dom";
 
 import Games from './games';
 import Game from './game';
 import AddGame from "./addGame";
 import Login from "./login";
-import UserContext from "../components/Globals/UserContext";
 import NavBar from "../components/Navigation/navBar";
 import EditGame from "./editGame";
+import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
 
 
 const Webpages = () => {
-    const [token, setToken] = React.useState(null);
-    const [role, setRole] = React.useState([null]);
+    const [token, setToken] = useLocalStorage("token", null);
+    const [role, setRole] = useLocalStorage("role", null);
 
     //Tablica stron
     const sites = [
@@ -41,48 +40,44 @@ const Webpages = () => {
         },
     ];
 
-    const userValues = {
-        token: token,
-        role: role,
-        setRole,
-        setToken
-    }
 
-    if (userValues.token) {
-        {
-            userValues.role.map((r) => {
-                switch (r){
-                    case "ROLE_USER":
-                        sites.map((site) => {if(site.name === "Lista Gier" || site.name === "Statystyki Gier") site.visible=true});
-                        break;
-                    case "ROLE_MANAGER":
-                        sites.map((site) => {if(site.name === "Dodaj Gre") site.visible=true});
-                        break;
-                }
-            })
+    if (token) {
+        console.log("eo")
+        switch (true) {
+            case role.includes("ROLE_USER"):
+                console.log("eo user")
+                sites.map((site) => {
+                    if (site.name === 'Lista Gier' || site.name === 'Statystyki Gier') {
+                        site.visible = true;
+                    }
+                })
+                break;
+            case role.includes("ROLE_MANAGER"):
+                console.log("eo manager")
+                sites.map((site) => {
+                    site.visible = true;
+                })
+                break;
         }
     } else {
-        {
-            console.log("EO")
-            sites.map((site) => site.visible = false)
-        }
+        sites.map((site) => {
+            site.visible = false;
+        })
     }
 
     return (
-        <UserContext.Provider value={userValues}>
-            <>
-                <Router>
-                    <NavBar sites={sites}/>
-                    <Routes>
-                        <Route exact path="/" element={<Login/>}/>
-                        <Route path="/games" element={<Games/>}/>
-                        <Route path="/game/:id" element={<Game/>}/>
-                        <Route path="/addGame" element={<AddGame/>}/>
-                        <Route path="/editGame/:id" element={<EditGame/>}/>
-                    </Routes>
-                </Router>
-            </>
-        </UserContext.Provider>
+        <>
+            <Router>
+                <NavBar sites={sites}/>
+                <Routes>
+                    <Route exact path="/" element={<Login/>}/>
+                    <Route path="/games" element={<Games/>}/>
+                    <Route path="/game/:id" element={<Game/>}/>
+                    <Route path="/addGame" element={<AddGame/>}/>
+                    <Route path="/editGame/:id" element={<EditGame/>}/>
+                </Routes>
+            </Router>
+        </>
     );
 };
 
