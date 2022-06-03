@@ -39,7 +39,8 @@ const columns = [
 ];
 
 const GamesTable = gamesData => (
-    <div style={{height: 400, width: '100%'}}>
+    <div style={{height: 400, width: '100%',
+        backgroundColor: "darkslategrey"}}>
         <DataGrid
             rows={gamesData.games}
             columns={columns}

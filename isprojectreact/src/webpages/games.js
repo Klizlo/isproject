@@ -21,7 +21,6 @@ const Games = () => {
             .then(
                 (data) => {
                     setIsLoaded(true);
-                    console.log(data);
                     setGames(data);
                 },
                 (error) => {
@@ -40,7 +39,6 @@ const Games = () => {
                 game.price = "free";
             }
         })
-        console.log(games);
         return (
             <div className={"table_container"}>
                 <h1>Tabela gier</h1>
