@@ -4,11 +4,11 @@ import Variables from "../components/Globals/Variables";
 import {
     Box,
     Card,
-    CardContent, Divider, Fab,
+    CardContent, Checkbox, Divider, Fab,
     Grid,
     List,
     ListItem,
-    ListItemText, Modal, TextField,
+    ListItemText, ListSubheader, Modal, TextField,
     Typography,
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -16,7 +16,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import UserContext from "../components/Globals/UserContext";
 
 
-const ininitialGames = {
+const initialGames = {
     id: null,
     steamID: null,
     title: null,
@@ -45,15 +45,32 @@ const EditGame = () => {
     const navigate = useNavigate();
     const {id} = useParams();
     const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [game, setGame] = useState(ininitialGames);
+    const [isLoadedG, setIsLoadedG] = useState(false);
+    const [isLoadedT, setIsLoadedT] = useState(false);
+    const [game, setGame] = useState(initialGames);
     const [tags, setTags] = useState(null);
     const [open, setOpen] = useState(false);
     const endpoint = Variables.API + "/games/" + id;
     const user = useContext(UserContext);
 
+    const [checked, setChecked] = React.useState([]);
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+        console.log(checked);
+    };
+
     const handleAdding = () => {
-        setGame(ininitialGames);
+        setGame(initialGames);
         setOpen(true);
     }
 
@@ -68,10 +85,11 @@ const EditGame = () => {
             .then(
                 (data) => {
                     setGame(data);
-                    setIsLoaded(true);
+                    console.log(data);
+                    setIsLoadedG(true);
                 },
                 (error) => {
-                    setIsLoaded(true);
+                    setIsLoadedG(true);
                     setError(error);
                 }
             )
@@ -85,10 +103,11 @@ const EditGame = () => {
             .then(
                 (data) => {
                     setTags(data);
-                    setIsLoaded(true);
+                    console.log(data);
+                    setIsLoadedT(true);
                 },
                 (error) => {
-                    setIsLoaded(true);
+                    setIsLoadedT(true);
                     setError(error);
                 }
             )
@@ -96,13 +115,16 @@ const EditGame = () => {
     if (error) {
         return <div>Error: {error.message}</div>;
     }
-    if (!isLoaded) {
+    if (!isLoadedG || !isLoadedT) {
         return <div>Loading...</div>;
     }
 
 
-    if (game) {
-
+    if (game && tags) {
+        let devs = '';
+        game.developers.map((developer) => {
+            devs += developer.name + ";";
+        })
         return (
             <Box
                 component="form"
@@ -134,27 +156,63 @@ const EditGame = () => {
                     <Grid item my={2}>
                         <TextField id="steamID" label="SteamID" variant="outlined" placeholder={game.steamID}/>
                     </Grid>
+
                     <Grid item my={2}>
-                        <TextField id="metacritic" label="Metacritic" variant="outlined" placeholder={game.metacritic}/>
+                        <TextField id="metacritic" label="Metacritic" variant="outlined"
+                                   placeholder={game.metacritic}/>
                     </Grid>
                     <Grid item my={2}>
                         <TextField id="price" label="Cena" variant="outlined" placeholder={game.price}/>
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="releaseDate" label="Data wydania" variant="outlined" placeholder={game.releaseDate}/>
+                        <TextField id="releaseDate" label="Data wydania" variant="outlined"
+                                   placeholder={game.releaseDate}/>
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="requiredAge" label="Ograniczenia wiekowe" variant="outlined" placeholder={game.requiredAge}/>
+                        <TextField id="requiredAge" label="Ograniczenia wiekowe" variant="outlined"
+                                   placeholder={game.requiredAge}/>
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="currentPlayerCount" label="Obecna liczba graczy" variant="outlined" placeholder={game.currentPlayerCount}/>
+                        <TextField id="currentPlayerCount" label="Obecna liczba graczy" variant="outlined"
+                                   placeholder={game.currentPlayerCount}/>
                     </Grid>
                     <Grid item my={2}>
-                        <TextField id="title" label="Deweloperzy" variant="outlined" placeholder={game.title}/>
+                        <TextField id="title" label="Deweloperzy" variant="outlined" placeholder={devs}/>
                     </Grid>
-                    <Grid item my={2}>
-                        <TextField id="title" label="Tagi" variant="outlined" placeholder={game.title}/>
-                    </Grid>
+                    <List
+                        sx={{
+                            width: '100%',
+                            maxWidth: 225,
+                            bgcolor: 'lightgrey',
+                            position: 'relative',
+                            overflow: 'auto',
+                            maxHeight: 300,
+                            border: 2,
+                            borderColor: "dimgrey",
+                            borderRadius: "12px",
+                            '& ul': {padding: 0},
+                        }}
+                        subheader={<li/>}
+                    >
+                        <li key={`section-Tags`}>
+                            <ul>
+                                <ListSubheader>Tagi:</ListSubheader>
+                                {tags.map((tag) => (
+                                    <ListItem key={tag.id}
+                                              secondaryAction={
+                                                  <Checkbox
+                                                      edge="end"
+                                                      onChange={handleToggle(tag.id)}
+                                                      checked={checked.indexOf(tag.id) !== -1}
+                                                  />
+                                              }
+                                              disablePadding>
+                                        <ListItemText id={tag.name} primary={tag.name} sx={{ml: 2}}/>
+                                    </ListItem>
+                                ))}
+                            </ul>
+                        </li>
+                    </List>
                     <Grid item my={2}>
                         <Fab variant="extended" color="secondary" sx={{mr: 2}}
                              onClick={() => {
