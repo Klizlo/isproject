@@ -47,6 +47,7 @@ const EditGame = () => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
     const [game, setGame] = useState(ininitialGames);
+    const [tags, setTags] = useState(null);
     const [open, setOpen] = useState(false);
     const endpoint = Variables.API + "/games/" + id;
     const user = useContext(UserContext);
@@ -74,6 +75,23 @@ const EditGame = () => {
                     setError(error);
                 }
             )
+        fetch(Variables.API + "/tags", {
+            method: 'GET',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + user.token
+            })
+        })
+            .then(res => res.json())
+            .then(
+                (data) => {
+                    setTags(data);
+                    setIsLoaded(true);
+                },
+                (error) => {
+                    setIsLoaded(true);
+                    setError(error);
+                }
+            )
     }, [id])
     if (error) {
         return <div>Error: {error.message}</div>;
@@ -84,10 +102,6 @@ const EditGame = () => {
 
 
     if (game) {
-
-        if (!game.price) {
-            game.price = 'free';
-        }
 
         return (
             <Box
