@@ -43,7 +43,6 @@ const Login = () => {
 
     }
 
-
     useEffect(() => {
         // storing input name
         localStorage.setItem("token", JSON.stringify(token));

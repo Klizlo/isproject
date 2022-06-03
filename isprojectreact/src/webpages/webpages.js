@@ -18,11 +18,7 @@ const Webpages = () => {
     const [token, setToken] = useLocalStorage("token", null);
     const [role, setRole] = useLocalStorage("role", null);
 
-    //Tablica stron
     const sites = [
-        //name: Nazwa na NavBar
-        //link: Link do strony
-        //visible: Czy widoczne
         {
             name: "Lista Gier",
             link: "/games",
@@ -44,18 +40,18 @@ const Webpages = () => {
     if (token) {
         console.log("eo")
         switch (true) {
+            case role.includes("ROLE_MANAGER"):
+                console.log("eo manager")
+                sites.map((site) => {
+                    site.visible = true;
+                })
+                break;
             case role.includes("ROLE_USER"):
                 console.log("eo user")
                 sites.map((site) => {
                     if (site.name === 'Lista Gier' || site.name === 'Statystyki Gier') {
                         site.visible = true;
                     }
-                })
-                break;
-            case role.includes("ROLE_MANAGER"):
-                console.log("eo manager")
-                sites.map((site) => {
-                    site.visible = true;
                 })
                 break;
         }
@@ -66,18 +62,17 @@ const Webpages = () => {
     }
 
     return (
-        <>
-            <Router>
-                <NavBar sites={sites}/>
-                <Routes>
-                    <Route exact path="/" element={<Login/>}/>
-                    <Route path="/games" element={<Games/>}/>
-                    <Route path="/game/:id" element={<Game/>}/>
-                    <Route path="/addGame" element={<AddGame/>}/>
-                    <Route path="/editGame/:id" element={<EditGame/>}/>
-                </Routes>
-            </Router>
-        </>
+
+        <Router>
+            <NavBar sites={sites}/>
+            <Routes>
+                <Route exact path="/" element={<Login/>}/>
+                <Route path="/games" element={<Games/>}/>
+                <Route path="/game/:id" element={<Game/>}/>
+                <Route path="/addGame" element={<AddGame/>}/>
+                <Route path="/editGame/:id" element={<EditGame/>}/>
+            </Routes>
+        </Router>
     );
 };
 

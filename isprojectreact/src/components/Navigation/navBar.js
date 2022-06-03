@@ -36,8 +36,8 @@ const NavBar = (sites) => {
                         color={"warning"}
                         key={"logOut"}
                         onClick={() => {
-                        navigate("/")
-                    }}>
+                            navigate("/")
+                        }}>
                         Wyloguj
                     </Button>
                 ) : (

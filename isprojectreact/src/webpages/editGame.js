@@ -88,25 +88,30 @@ const EditGame = () => {
         checked.map((c) => {
             tags.map((tag) => {
                 if (tag.id === c) {
-                    tagsToDB.push(tag.name);
+                    tagsToDB.push({name: tag.name});
                 }
             })
         })
         console.log(tagsToDB);
-        const developersToDB = developers.split(';');
-        if (developersToDB.includes('')) {
-            developersToDB.pop();
+        const temp = developers.split(';');
+        if (temp.includes('')) {
+            temp.pop();
         }
+        let developersToDB = [];
+        temp.map((t) => {
+           developersToDB.push({name: t});
+        })
         console.log(developersToDB);
 
+
         const jsonBody = JSON.stringify({
-            currentPlayerCount: currentPlayerCount,
+            currentPlayerCount: parseInt(currentPlayerCount),
             developers: developersToDB,
-            metacritic: metacritic,
+            metacritic: parseInt(metacritic),
             price: price,
             releaseDate: releaseDate,
-            requiredAge: requiredAge,
-            steamID: steamID,
+            requiredAge: parseInt(requiredAge),
+            steamID: parseInt(steamID),
             tags: tagsToDB,
             title: title
         })
@@ -131,7 +136,7 @@ const EditGame = () => {
             })
         })
 
-        //setOpen(true);
+        setOpen(true);
     }
 
     useEffect(() => {
@@ -336,7 +341,7 @@ const EditGame = () => {
                     <Grid item my={2}>
                         <Fab variant="extended" color="secondary" sx={{mr: 2}}
                              onClick={() => {
-                                 navigate("/editGame");
+                                 navigate("/game/" + id);
                              }}
                         >
                             <ArrowBackIcon sx={{mr: 1}}/>
@@ -355,6 +360,7 @@ const EditGame = () => {
                 <Modal
                     open={open}
                     onClose={() => {
+                        navigate("/games")
                         setOpen(false);
                     }}
                     aria-labelledby="modal-modal-title"
