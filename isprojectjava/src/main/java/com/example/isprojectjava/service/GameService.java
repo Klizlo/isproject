@@ -98,8 +98,21 @@ public class GameService {
         editedGame.setPrice(game.getPrice());
         editedGame.setRequiredAge(game.getRequiredAge());
         editedGame.setCurrentPlayerCount(game.getCurrentPlayerCount());
-        editedGame.setDevelopers(game.getDevelopers());
-        editedGame.setTags(game.getTags());
+
+        Set<Developer> developers = new HashSet<>();
+        for (Developer d: game.getDevelopers()) {
+            d.setId(null);
+            developers.add(developerRepository.findByName(d.getName()).orElseGet(() -> developerRepository.save(d)));
+        }
+        editedGame.setDevelopers(developers);
+
+        Set<Tag> tags = tagsRepository.findAllByNameIn(game.getTags().stream()
+                .map(Tag::getName)
+                .collect(Collectors.toSet())).orElseThrow(TagNotFoundException::new);
+        editedGame.setTags(tags);
+
+        game.addTags(tags);
+        game.addDevelopers(developers);
 
         return editedGame;
     }
