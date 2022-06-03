@@ -87,17 +87,49 @@ const EditGame = () => {
         let tagsToDB = [];
         checked.map((c) => {
             tags.map((tag) => {
-                if(tag.id === c){
+                if (tag.id === c) {
                     tagsToDB.push(tag.name);
                 }
             })
         })
         console.log(tagsToDB);
         const developersToDB = developers.split(';');
-        if(developersToDB.includes('')){
+        if (developersToDB.includes('')) {
             developersToDB.pop();
         }
         console.log(developersToDB);
+
+        const jsonBody = JSON.stringify({
+            currentPlayerCount: currentPlayerCount,
+            developers: developersToDB,
+            metacritic: metacritic,
+            price: price,
+            releaseDate: releaseDate,
+            requiredAge: requiredAge,
+            steamID: steamID,
+            tags: tagsToDB,
+            title: title
+        })
+        console.log(jsonBody);
+        fetch(endpoint, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentPlayerCount: currentPlayerCount,
+                developers: developersToDB,
+                metacritic: metacritic,
+                price: price,
+                releaseDate: releaseDate,
+                requiredAge: requiredAge,
+                steamID: steamID,
+                tags: tagsToDB,
+                title: title
+            })
+        })
 
         //setOpen(true);
     }
@@ -139,7 +171,7 @@ const EditGame = () => {
                     setError(error);
                 }
             )
-    }, [id])
+    }, [])
     if (error) {
         return <div>Error: {error.message}</div>;
     }
