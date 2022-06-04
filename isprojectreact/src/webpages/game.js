@@ -95,6 +95,7 @@ const Game = () => {
     const [open, setOpen] = useState(false);
     const endpoint = Variables.API + "/games/" + id;
     const [token, setToken] = useLocalStorage("token", null);
+    const [role, setRole] = useLocalStorage("role", null);
 
     const handleDelete = () =>{
         fetch(Variables.API + "/games/" + id, {
@@ -137,11 +138,9 @@ const Game = () => {
 
 
     if (game) {
-        console.log(game);
         if (!isDeleted && !game.price) {
             game.price = "free";
         }
-        console.log(game);
         return (
             <Card sx={{minWidth: 300,}}>
                 <CardContent sx={{bgcolor: 'action.hover'}}>
@@ -225,22 +224,30 @@ const Game = () => {
                             </Typography>
                         </Grid>
                     </Grid>
-                    <Fab variant="extended" color="secondary" sx={{mr:2}}
-                        onClick={() => {
-                            navigate("/editGame/" + id);
-                        }}
-                    >
-                        <EditIcon sx={{ mr: 1 }}/>
-                        Edytuj
-                    </Fab>
-                    <Fab variant="extended" color="error"
-                         onClick={() => {
-                            handleDelete();
-                         }}
-                    >
-                        <DeleteIcon sx={{ mr: 1 }}/>
-                        Usuń
-                    </Fab>
+                    {role.includes("ROLE_MANAGER") ? (
+                            <Fab variant="extended" color="secondary" sx={{mr:2}}
+                                 onClick={() => {
+                                     navigate("/editGame/" + id);
+                                 }}
+                            >
+                                <EditIcon sx={{ mr: 1 }}/>
+                                Edytuj
+                            </Fab>
+                    ) : (
+                        <div></div>
+                    )}
+                    {role.includes("ROLE_ADMIN") ? (
+                        <Fab variant="extended" color="error"
+                             onClick={() => {
+                                 handleDelete();
+                             }}
+                        >
+                            <DeleteIcon sx={{ mr: 1 }}/>
+                            Usuń
+                        </Fab>
+                    ) : (
+                        <div></div>
+                    )}
                 </CardContent>
                 <Modal
                     open={open}

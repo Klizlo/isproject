@@ -76,14 +76,6 @@ const EditGame = () => {
     };
 
     const handleAdding = () => {
-        console.log(title);
-        console.log(steamID);
-        console.log(requiredAge);
-        console.log(releaseDate);
-        console.log(price);
-        console.log(metacritic);
-        console.log(developers);
-        console.log(currentPlayerCount);
         let tagsToDB = [];
         checked.map((c) => {
             tags.map((tag) => {
@@ -92,7 +84,6 @@ const EditGame = () => {
                 }
             })
         })
-        console.log(tagsToDB);
         const temp = developers.split(';');
         if (temp.includes('')) {
             temp.pop();
@@ -101,7 +92,6 @@ const EditGame = () => {
         temp.map((t) => {
            developersToDB.push({name: t});
         })
-        console.log(developersToDB);
 
 
         const jsonBody = JSON.stringify({
@@ -115,7 +105,6 @@ const EditGame = () => {
             tags: tagsToDB,
             title: title
         })
-        console.log(jsonBody);
         fetch(endpoint, {
             method: 'PUT',
             headers: {

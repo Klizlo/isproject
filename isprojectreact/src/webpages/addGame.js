@@ -135,7 +135,6 @@ const EditGame = () => {
             .then(
                 (data) => {
                     setTags(data);
-                    console.log(data);
                     setIsLoadedT(true);
                 },
                 (error) => {

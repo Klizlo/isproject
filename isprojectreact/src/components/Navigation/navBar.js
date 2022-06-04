@@ -38,6 +38,7 @@ const NavBar = (sites) => {
                         onClick={() => {
                             localStorage.setItem("token", null);
                             localStorage.setItem("role", null);
+                            window.location.reload(true);
                             navigate("/")
                         }}>
                         Wyloguj

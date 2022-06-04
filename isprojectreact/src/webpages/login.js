@@ -4,6 +4,7 @@ import {Alert, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import jwtDecode from "jwt-decode";
 import {useNavigate} from "react-router-dom";
 import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
+import Webpages from "./webpages";
 
 const Login = () => {
 
@@ -14,6 +15,8 @@ const Login = () => {
     const [password, setPassword] = useState(null);
     const [token, setToken] = useState(null);
     const [role, setRole] = useState(null);
+    const [tokenLoaded, setTokenLoaded] = useState(false);
+    const [roleLoaded, setRoleLoaded] = useState(false);
 
     const handleLogin = () => {
         fetch(Variables.API + "/login", {
@@ -41,17 +44,19 @@ const Login = () => {
                     setIsError(true);
                 }
             )
-
     }
 
-    useEffect(() => {
-        // storing input name
+    if (token && role && !roleLoaded && !tokenLoaded) {
         localStorage.setItem("token", JSON.stringify(token));
-    }, [token]);
-    useEffect(() => {
-        // storing input name
+        setTokenLoaded(true)
         localStorage.setItem("role", JSON.stringify(role));
-    }, [role]);
+        setRoleLoaded(true)
+    }
+    if (tokenLoaded && roleLoaded) {
+        window.location.reload(true);
+        navigate('/games');
+    }
+
 
     return (
         <Box
@@ -97,6 +102,7 @@ const Login = () => {
                 <Grid item my={2}>
                     <TextField
                         id="password"
+                        type={"password"}
                         label="Hasło"
                         variant="outlined"
                         placeholder="Podaj hasło"
@@ -127,7 +133,7 @@ const Login = () => {
                 </Grid>
             </Grid>
         </Box>
-);
+    );
 }
 
 export default Login;

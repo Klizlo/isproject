@@ -91,18 +91,17 @@ const Games = () => {
     const [file, setFile] = useState([]);
     const endpoint = Variables.API + "/games/general";
     const [token, setToken] = useLocalStorage("token", null);
+    const [role, setRole] = useLocalStorage("role", null);
 
-    const handleAddFromFile = () => {
+    const handleAddFromFile = async () => {
         const formData = new FormData();
-        formData.append('File', file);
-        console.log(formData);
-        fetch(Variables.API + "/games/file", {
+        formData.append('file', file);
+        const response = await fetch(Variables.API + "/games/file", {
             method: 'POST',
             headers: new Headers({
-                'Authorization': 'Bearer ' + token,
-                'Content-type': file.type
+                'Authorization': 'Bearer ' + token
             }),
-            param: formData
+            body: formData
         })
             .then((response) => response.blob())
             .then((result) => {
@@ -132,7 +131,6 @@ const Games = () => {
                 }
             )
     }, [])
-    console.log(file);
     if (error) {
         return <div>Error: {error.message}</div>;
     } else if (!isLoaded) {
@@ -169,48 +167,52 @@ const Games = () => {
                         Tabela Gier
                     </Typography>
                     <GamesTable games={games}/>
-                    <div>
-                        <Grid
-                            container
-                            spacing={2}
-                            my={2}
-                            alignSelf={"center"}
-                            alignItems={"center"}
-                        >
-                            <Fab variant="extended" color="success" sx={{mr: 2}}
-                                 onClick={() => {
-                                     navigate("/addGame");
-                                 }}
+                    {role.includes("ROLE_MANAGER") ? (
+                        <div>
+                            <Grid
+                                container
+                                spacing={2}
+                                my={2}
+                                alignSelf={"center"}
+                                alignItems={"center"}
                             >
-                                <AddIcon sx={{mr: 1}}/>
-                                Dodaj gre
-                            </Fab>
-                            <Fab variant="extended" color="info" sx={{mr: 2}}
-                                 onClick={() => {
-                                     handleDownloadXML(token);
-                                 }}
-                            >
-                                <DownloadIcon sx={{mr: 1}}/>
-                                XML
-                            </Fab>
-                            <Fab variant="extended" color="info" sx={{mr: 2}}
-                                 onClick={() => {
-                                     handleDownloadJSON(token);
-                                 }}
-                            >
-                                <DownloadIcon sx={{mr: 1}}/>
-                                JSON
-                            </Fab>
-                            <Fab variant="extended" color="primary" sx={{mr: 2}}
-                                 onClick={() => {
-                                     setOpen(true);
-                                 }}
-                            >
-                                <UploadIcon sx={{mr: 1}}/>
-                                Dodaj z pliku
-                            </Fab>
-                        </Grid>
-                    </div>
+                                <Fab variant="extended" color="success" sx={{mr: 2}}
+                                     onClick={() => {
+                                         navigate("/addGame");
+                                     }}
+                                >
+                                    <AddIcon sx={{mr: 1}}/>
+                                    Dodaj gre
+                                </Fab>
+                                <Fab variant="extended" color="info" sx={{mr: 2}}
+                                     onClick={() => {
+                                         handleDownloadXML(token);
+                                     }}
+                                >
+                                    <DownloadIcon sx={{mr: 1}}/>
+                                    XML
+                                </Fab>
+                                <Fab variant="extended" color="info" sx={{mr: 2}}
+                                     onClick={() => {
+                                         handleDownloadJSON(token);
+                                     }}
+                                >
+                                    <DownloadIcon sx={{mr: 1}}/>
+                                    JSON
+                                </Fab>
+                                <Fab variant="extended" color="primary" sx={{mr: 2}}
+                                     onClick={() => {
+                                         setOpen(true);
+                                     }}
+                                >
+                                    <UploadIcon sx={{mr: 1}}/>
+                                    Dodaj z pliku
+                                </Fab>
+                            </Grid>
+                        </div>
+                    ) : (
+                        <div></div>
+                    )}
                 </Grid>
                 <Modal
                     open={open}
@@ -220,58 +222,65 @@ const Games = () => {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={style}>
-                        <Typography
-                            id="modal-modal-title"
-                            variant="h6"
-                            component="h2"
-                            color={'text.primary'}
-                        >
-                            Wczytaj dane z pliku
-                        </Typography>
-                        <label htmlFor="contained-button-file">
-                            <input id="contained-button-file" type="file" name="file" hidden onChange={(e) => {
-                                setFile(e.target.files[0])
-                            }}/>
-                            <Button variant="contained" component="span">
-                                Wybierz Plik
+                    <form encType="multipart/form-data" action="">
+                        <Box sx={style}>
+                            <Typography
+                                id="modal-modal-title"
+                                variant="h6"
+                                component="h2"
+                                color={'text.primary'}
+                            >
+                                Wczytaj dane z pliku
+                            </Typography>
+                            <label htmlFor="contained-button-file">
+                                <input
+                                    id="contained-button-file"
+                                    type="file"
+                                    name="file"
+                                    hidden
+                                    onChange={(e) => {
+                                    setFile(e.target.files[0])
+                                }}/>
+                                <Button variant="contained" component="span">
+                                    Wybierz Plik
+                                </Button>
+                            </label>
+                            <Typography
+                                sx={{
+                                    fontSize: 20,
+                                    color: 'lightgrey',
+                                    mt: 2
+                                }}
+                            >
+                                Nazwa: {file.name}
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    fontSize: 20,
+                                    color: 'lightgrey',
+                                }}
+                            >
+                                Typ: {file.type}
+                            </Typography>
+                            <Typography
+                                sx={{
+                                    fontSize: 20,
+                                    color: 'lightgrey',
+                                    mb: 2
+                                }}
+                            >
+                                Rozmiar: {file.size} bytes
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                component="span"
+                                onClick={() => {
+                                    handleAddFromFile();
+                                }}>
+                                Zapisz do bazy
                             </Button>
-                        </label>
-                        <Typography
-                            sx={{
-                                fontSize: 20,
-                                color: 'lightgrey',
-                                mt: 2
-                            }}
-                        >
-                            Nazwa: {file.name}
-                        </Typography>
-                        <Typography
-                            sx={{
-                                fontSize: 20,
-                                color: 'lightgrey',
-                            }}
-                        >
-                            Typ: {file.type}
-                        </Typography>
-                        <Typography
-                            sx={{
-                                fontSize: 20,
-                                color: 'lightgrey',
-                                mb: 2
-                            }}
-                        >
-                            Rozmiar: {file.size} bytes
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            component="span"
-                            onClick={() => {
-                                handleAddFromFile();
-                            }}>
-                            Zapisz do bazy
-                        </Button>
-                    </Box>
+                        </Box>
+                    </form>
                 </Modal>
             </Box>
         )

@@ -17,10 +17,9 @@ import ProtectedRoute from "../components/Protected/protectedRoute";
 
 
 const Webpages = () => {
+
     const [token, setToken] = useLocalStorage("token", null);
     const [role, setRole] = useLocalStorage("role", null);
-
-    console.log(role);
 
     const sites = [
         {
@@ -45,13 +44,11 @@ const Webpages = () => {
         console.log("eo")
         switch (true) {
             case role.includes("ROLE_MANAGER"):
-                console.log("eo manager")
                 sites.map((site) => {
                     site.visible = true;
                 })
                 break;
             case role.includes("ROLE_USER"):
-                console.log("eo user")
                 sites.map((site) => {
                     if (site.name === 'Lista Gier' || site.name === 'Statystyki Gier') {
                         site.visible = true;
@@ -115,6 +112,5 @@ const Webpages = () => {
         </Router>
     );
 };
-
 
 export default Webpages;
