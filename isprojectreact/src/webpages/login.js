@@ -3,6 +3,7 @@ import Variables from "../components/Globals/Variables";
 import {Alert, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import jwtDecode from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
 
 const Login = () => {
 
@@ -51,10 +52,6 @@ const Login = () => {
         // storing input name
         localStorage.setItem("role", JSON.stringify(role));
     }, [role]);
-
-    if(token && role){
-        navigate("/games")
-    }
 
     return (
         <Box

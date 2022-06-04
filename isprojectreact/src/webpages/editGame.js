@@ -150,7 +150,9 @@ const EditGame = () => {
             .then(
                 (data) => {
                     setGame(data);
-                    console.log(data);
+                    data.tags.map((tag) => {
+                        checked.push(tag.id);
+                    })
                     setIsLoadedG(true);
                 },
                 (error) => {
@@ -168,7 +170,6 @@ const EditGame = () => {
             .then(
                 (data) => {
                     setTags(data);
-                    console.log(data);
                     setIsLoadedT(true);
                 },
                 (error) => {
@@ -220,7 +221,7 @@ const EditGame = () => {
                             id="title"
                             label="Tytuł gry"
                             variant="outlined"
-                            placeholder={game.title}
+                            value={game.title}
                             onChange={(e) => {
                                 setTitle(e.target.value);
                             }}
@@ -231,7 +232,7 @@ const EditGame = () => {
                             id="steamID"
                             label="SteamID"
                             variant="outlined"
-                            placeholder={game.steamID}
+                            value={game.steamID}
                             onChange={(e) => {
                                 setSteamID(e.target.value);
                             }}
@@ -243,7 +244,7 @@ const EditGame = () => {
                             id="metacritic"
                             label="Metacritic"
                             variant="outlined"
-                            placeholder={game.metacritic}
+                            value={game.metacritic}
                             onChange={(e) => {
                                 setMetacritic(e.target.value);
                             }}
@@ -254,7 +255,7 @@ const EditGame = () => {
                             id="price"
                             label="Cena"
                             variant="outlined"
-                            placeholder={game.price}
+                            value={game.price}
                             onChange={(e) => {
                                 setPrice(e.target.value);
                             }}
@@ -265,7 +266,7 @@ const EditGame = () => {
                             id="releaseDate"
                             label="Data wydania"
                             variant="outlined"
-                            placeholder={game.releaseDate}
+                            value={game.releaseDate}
                             onChange={(e) => {
                                 setReleaseDate(e.target.value);
                             }}
@@ -276,7 +277,7 @@ const EditGame = () => {
                             id="requiredAge"
                             label="Ograniczenia wiekowe"
                             variant="outlined"
-                            placeholder={game.requiredAge}
+                            value={game.requiredAge}
                             onChange={(e) => {
                                 setRequiredAge(e.target.value);
                             }}
@@ -287,7 +288,7 @@ const EditGame = () => {
                             id="currentPlayerCount"
                             label="Obecna liczba graczy"
                             variant="outlined"
-                            placeholder={game.currentPlayerCount}
+                            value={game.currentPlayerCount}
                             onChange={(e) => {
                                 setCurrentPlayerCount(e.target.value);
                             }}
@@ -298,7 +299,7 @@ const EditGame = () => {
                             id="title"
                             label="Deweloperzy"
                             variant="outlined"
-                            placeholder={devs}
+                            value={devs}
                             onChange={(e) => {
                                 setDevelopers(e.target.value);
                             }}

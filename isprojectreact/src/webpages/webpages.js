@@ -12,11 +12,15 @@ import Login from "./login";
 import NavBar from "../components/Navigation/navBar";
 import EditGame from "./editGame";
 import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
+import GamesStats from "./gamesStats";
+import ProtectedRoute from "../components/Protected/protectedRoute";
 
 
 const Webpages = () => {
     const [token, setToken] = useLocalStorage("token", null);
     const [role, setRole] = useLocalStorage("role", null);
+
+    console.log(role);
 
     const sites = [
         {
@@ -67,10 +71,46 @@ const Webpages = () => {
             <NavBar sites={sites}/>
             <Routes>
                 <Route exact path="/" element={<Login/>}/>
-                <Route path="/games" element={<Games/>}/>
-                <Route path="/game/:id" element={<Game/>}/>
-                <Route path="/addGame" element={<AddGame/>}/>
-                <Route path="/editGame/:id" element={<EditGame/>}/>
+                <Route
+                    path="/games"
+                    element={
+                        <ProtectedRoute role={role} restriction={"ROLE_USER"}>
+                            <Games/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/game/:id"
+                    element={
+                        <ProtectedRoute role={role} restriction={"ROLE_USER"}>
+                            <Game/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/addGame"
+                    element={
+                        <ProtectedRoute role={role} restriction={"ROLE_MANAGER"}>
+                            <AddGame/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/editGame/:id"
+                    element={
+                        <ProtectedRoute role={role} restriction={"ROLE_MANAGER"}>
+                            <EditGame/>
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/gamesStats"
+                    element={
+                        <ProtectedRoute role={role} restriction={"ROLE_USER"}>
+                            <GamesStats/>
+                        </ProtectedRoute>
+                    }
+                />
             </Routes>
         </Router>
     );

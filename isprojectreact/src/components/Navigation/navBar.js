@@ -36,6 +36,8 @@ const NavBar = (sites) => {
                         color={"warning"}
                         key={"logOut"}
                         onClick={() => {
+                            localStorage.setItem("token", null);
+                            localStorage.setItem("role", null);
                             navigate("/")
                         }}>
                         Wyloguj
