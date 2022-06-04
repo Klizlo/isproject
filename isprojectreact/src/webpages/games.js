@@ -2,15 +2,26 @@ import React, {useState, useEffect} from 'react';
 import GamesTable from "../components/Tables/gamesTable";
 import Variables from "../components/Globals/Variables";
 import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
-import {Box, Button, Fab, Grid, Input, Typography} from "@mui/material";
+import {Box, Button, Fab, Grid, Input, Modal, Radio, RadioGroup, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadIcon from '@mui/icons-material/Upload';
 import {styled} from "@mui/material/styles";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 
-
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 const handleDownloadJSON = (token) => {
 
@@ -68,10 +79,12 @@ const handleDownloadXML = (token) => {
 
 }
 
+
 const Games = () => {
     const Input = styled('input')({
         display: 'none',
     });
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -79,6 +92,28 @@ const Games = () => {
     const [file, setFile] = useState([]);
     const endpoint = Variables.API + "/games/general";
     const [token, setToken] = useLocalStorage("token", null);
+
+    const handleAddFromFile = () => {
+        const formData = new FormData();
+        formData.append('File', file);
+        console.log(formData);
+        fetch(Variables.API + "/games/file", {
+            method: 'POST',
+            headers: new Headers({
+                'Authorization': 'Bearer ' + token,
+                'Content-type': file.type
+            }),
+            body: formData
+        })
+            .then((response) => response.blob())
+            .then((result) => {
+                console.log('Success:', result);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
     useEffect(() => {
         fetch(endpoint, {
             method: 'GET',
@@ -153,7 +188,7 @@ const Games = () => {
                             </Fab>
                             <Fab variant="extended" color="info" sx={{mr: 2}}
                                  onClick={() => {
-                                    handleDownloadXML(token);
+                                     handleDownloadXML(token);
                                  }}
                             >
                                 <DownloadIcon sx={{mr: 1}}/>
@@ -161,32 +196,15 @@ const Games = () => {
                             </Fab>
                             <Fab variant="extended" color="info" sx={{mr: 2}}
                                  onClick={() => {
-                                    handleDownloadJSON(token);
+                                     handleDownloadJSON(token);
                                  }}
                             >
                                 <DownloadIcon sx={{mr: 1}}/>
                                 JSON
                             </Fab>
-                            <label htmlFor="contained-button-file">
-                                <Input id="contained-button-file" type="file" onChange={(e) => {setFile(e.target.value)}}/>
-                                <Button variant="contained" component="span">
-                                    Upload
-                                </Button>
-                            </label>
-                            <label htmlFor="contained-button-file">
-                                <Input id="contained-button-file" multiple type="file" />
-                                <Fab variant="extended" color="primary" sx={{mr: 2}}
-                                     onClick={() => {
-
-                                     }}
-                                >
-                                    <UploadIcon sx={{mr: 1}}/>
-                                    Dodaj z pliku
-                                </Fab>
-                            </label>
                             <Fab variant="extended" color="primary" sx={{mr: 2}}
                                  onClick={() => {
-
+                                     setOpen(true);
                                  }}
                             >
                                 <UploadIcon sx={{mr: 1}}/>
@@ -195,6 +213,67 @@ const Games = () => {
                         </Grid>
                     </div>
                 </Grid>
+                <Modal
+                    open={open}
+                    onClose={() => {
+                        setOpen(false);
+                    }}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <Typography
+                            id="modal-modal-title"
+                            variant="h6"
+                            component="h2"
+                            color={'text.primary'}
+                        >
+                            Wczytaj dane z pliku
+                        </Typography>
+                        <label htmlFor="contained-button-file">
+                            <input id="contained-button-file" type="file" name="file" hidden onChange={(e) => {
+                                setFile(e.target.files[0])
+                            }}/>
+                            <Button variant="contained" component="span">
+                                Wybierz Plik
+                            </Button>
+                        </label>
+                        <Typography
+                            sx={{
+                                fontSize: 20,
+                                color: 'lightgrey',
+                                mt: 2
+                            }}
+                        >
+                            Nazwa: {file.name}
+                        </Typography>
+                        <Typography
+                            sx={{
+                                fontSize: 20,
+                                color: 'lightgrey',
+                            }}
+                        >
+                            Typ: {file.type}
+                        </Typography>
+                        <Typography
+                            sx={{
+                                fontSize: 20,
+                                color: 'lightgrey',
+                                mb: 2
+                            }}
+                        >
+                            Rozmiar: {file.size} bytes
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            component="span"
+                            onClick={() => {
+                                handleAddFromFile();
+                            }}>
+                            Zapisz do bazy
+                        </Button>
+                    </Box>
+                </Modal>
             </Box>
         )
             ;
