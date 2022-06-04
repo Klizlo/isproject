@@ -11,12 +11,18 @@ const GamesStats = () => {
 
     useEffect(() => {
         fetch(Variables.API + "/ws/getStatisticsRequest", {
-            method: 'GET',
+            method: 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token,
                 'Accept': 'application/xml',
-                'content-type': 'application/x-www-form-urlencoded',
-            })
+                'content-type': 'text/xml',
+            }),
+            body: "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:soap=\"http://example.com/isprojectjava/model/soap\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "      <soap:getStatisticsRequest/>\n" +
+                "   </soapenv:Body>\n" +
+                "</soapenv:Envelope>"
         })
             .then(res => res.text())
             .then(text => {

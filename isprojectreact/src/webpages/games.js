@@ -9,6 +9,15 @@ import DownloadIcon from '@mui/icons-material/Download';
 import UploadIcon from '@mui/icons-material/Upload';
 
 
+const handleDownloadJSON = (token) => {
+    fetch(Variables.API + "/games/file/json", {
+        method: 'GET',
+        headers: new Headers({
+            'Authorization': 'Bearer ' + token
+        })
+    })
+}
+
 const Games = () => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
