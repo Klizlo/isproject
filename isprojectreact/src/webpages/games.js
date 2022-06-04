@@ -2,13 +2,12 @@ import React, {useState, useEffect} from 'react';
 import GamesTable from "../components/Tables/gamesTable";
 import Variables from "../components/Globals/Variables";
 import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
-import {Box, Button, Fab, Grid, Input, Modal, Radio, RadioGroup, Typography} from "@mui/material";
+import {Box, Button, Fab, Grid, Modal, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
 import UploadIcon from '@mui/icons-material/Upload';
 import {styled} from "@mui/material/styles";
-import FormControlLabel from "@mui/material/FormControlLabel";
 
 
 const style = {
@@ -103,7 +102,7 @@ const Games = () => {
                 'Authorization': 'Bearer ' + token,
                 'Content-type': file.type
             }),
-            body: formData
+            param: formData
         })
             .then((response) => response.blob())
             .then((result) => {
