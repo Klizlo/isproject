@@ -211,7 +211,32 @@ const Games = () => {
                             </Grid>
                         </div>
                     ) : (
-                        <div></div>
+                        <div>
+                            <Grid
+                                container
+                                spacing={2}
+                                my={2}
+                                alignSelf={"center"}
+                                alignItems={"center"}
+                            >
+                                <Fab variant="extended" color="info" sx={{mr: 2}}
+                                     onClick={() => {
+                                         handleDownloadXML(token);
+                                     }}
+                                >
+                                    <DownloadIcon sx={{mr: 1}}/>
+                                    XML
+                                </Fab>
+                                <Fab variant="extended" color="info" sx={{mr: 2}}
+                                     onClick={() => {
+                                         handleDownloadJSON(token);
+                                     }}
+                                >
+                                    <DownloadIcon sx={{mr: 1}}/>
+                                    JSON
+                                </Fab>
+                            </Grid>
+                        </div>
                     )}
                 </Grid>
                 <Modal
