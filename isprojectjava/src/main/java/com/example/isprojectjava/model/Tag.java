@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 @XmlRootElement(name = "tags")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Table(name = "tag")
 public class Tag {
 
     @Id

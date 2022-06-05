@@ -20,6 +20,7 @@ import java.util.Set;
 @Setter
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Table(name = "game")
 public class Game {
 
     @Id

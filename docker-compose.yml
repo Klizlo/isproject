@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - front
+      - back
+    depends_on:
+      - backend
+      - mysqldb
+
+  backend:
+    image: backend
+    container_name: backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/isprojekt?autoReconnect=true&maxReconnects=1500&useSSL=false&useUnicode=true&serverTimezone=UTC
+    ports:
+      - 8080:8080
+    networks:
+      - back
+    depends_on:
+      - mysqldb
+  
+  mysqldb:
+    build:
+      dockerfile: mysqldump/Dockerfile
+      context: .
+    image: mysql:latest
+    container_name: mysqldb
+    networks:
+      - back
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=isprojekt
+      - MYSQL_USER=isprojekt
+      - MYSQL_PASSWORD=isprojekt
+    restart: always
+
+networks:
+  back:
