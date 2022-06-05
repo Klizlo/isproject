@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Variables from "../components/Globals/Variables";
 import {
     Box,
@@ -13,20 +13,6 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save';
 import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
-
-
-const initialGames = {
-    id: null,
-    steamID: null,
-    title: null,
-    tags: [{id: null, name: null}],
-    requiredAge: null,
-    releaseDate: null,
-    price: null,
-    metacritic: null,
-    currentPlayerCount: null,
-    developers: [{id: null, name: null}]
-}
 
 const style = {
     position: 'absolute',

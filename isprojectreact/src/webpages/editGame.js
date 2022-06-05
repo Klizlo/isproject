@@ -210,7 +210,7 @@ const EditGame = () => {
                             id="title"
                             label="Tytuł gry"
                             variant="outlined"
-                            value={game.title}
+                            placeholder={game.title}
                             onChange={(e) => {
                                 setTitle(e.target.value);
                             }}
@@ -221,7 +221,7 @@ const EditGame = () => {
                             id="steamID"
                             label="SteamID"
                             variant="outlined"
-                            value={game.steamID}
+                            placeholder={game.steamID}
                             onChange={(e) => {
                                 setSteamID(e.target.value);
                             }}
@@ -233,7 +233,7 @@ const EditGame = () => {
                             id="metacritic"
                             label="Metacritic"
                             variant="outlined"
-                            value={game.metacritic}
+                            placeholder={game.metacritic}
                             onChange={(e) => {
                                 setMetacritic(e.target.value);
                             }}
@@ -244,7 +244,7 @@ const EditGame = () => {
                             id="price"
                             label="Cena"
                             variant="outlined"
-                            value={game.price}
+                            placeholder={game.price}
                             onChange={(e) => {
                                 setPrice(e.target.value);
                             }}
@@ -255,7 +255,7 @@ const EditGame = () => {
                             id="releaseDate"
                             label="Data wydania"
                             variant="outlined"
-                            value={game.releaseDate}
+                            placeholder={game.releaseDate}
                             onChange={(e) => {
                                 setReleaseDate(e.target.value);
                             }}
@@ -266,7 +266,7 @@ const EditGame = () => {
                             id="requiredAge"
                             label="Ograniczenia wiekowe"
                             variant="outlined"
-                            value={game.requiredAge}
+                            placeholder={game.requiredAge}
                             onChange={(e) => {
                                 setRequiredAge(e.target.value);
                             }}
@@ -277,7 +277,7 @@ const EditGame = () => {
                             id="currentPlayerCount"
                             label="Obecna liczba graczy"
                             variant="outlined"
-                            value={game.currentPlayerCount}
+                            placeholder={game.currentPlayerCount}
                             onChange={(e) => {
                                 setCurrentPlayerCount(e.target.value);
                             }}
@@ -288,7 +288,7 @@ const EditGame = () => {
                             id="title"
                             label="Deweloperzy"
                             variant="outlined"
-                            value={devs}
+                            placeholder={devs}
                             onChange={(e) => {
                                 setDevelopers(e.target.value);
                             }}

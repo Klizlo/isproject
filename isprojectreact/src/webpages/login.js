@@ -1,10 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import Variables from "../components/Globals/Variables";
 import {Alert, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import jwtDecode from "jwt-decode";
 import {useNavigate} from "react-router-dom";
-import {useLocalStorage} from "../components/LocalStorageHandler/HandleLocalStorage";
-import Webpages from "./webpages";
 
 const Login = () => {
 

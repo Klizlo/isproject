@@ -80,7 +80,7 @@ const handleDownloadXML = (token) => {
 
 
 const Games = () => {
-    const Input = styled('input')({
+    styled('input')({
         display: 'none',
     });
     const [open, setOpen] = useState(false);
@@ -96,7 +96,7 @@ const Games = () => {
     const handleAddFromFile = async () => {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await fetch(Variables.API + "/games/file", {
+        fetch(Variables.API + "/games/file", {
             method: 'POST',
             headers: new Headers({
                 'Authorization': 'Bearer ' + token

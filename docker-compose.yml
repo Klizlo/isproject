@@ -17,9 +17,9 @@ services:
     image: backend
     container_name: backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/isprojekt?autoReconnect=true&maxReconnects=1500&useSSL=false&useUnicode=true&serverTimezone=UTC
-    expose:
-      - 8080
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/isprojekt?autoReconnect=true&maxReconnects=100&useSSL=false&useUnicode=true&serverTimezone=UTC
+    ports:
+      - "8090:8080"
     networks:
       - back
     depends_on:
