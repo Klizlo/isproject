@@ -1,3 +1,3 @@
 export default {
-    API: "http://backend:8080"
+    API: "http://localhost:8090"
 };
