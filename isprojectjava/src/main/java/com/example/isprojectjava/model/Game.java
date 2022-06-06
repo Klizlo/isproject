@@ -2,6 +2,8 @@ package com.example.isprojectjava.model;
 
 
 import com.example.isprojectjava.config.LocalDateAdapter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +38,7 @@ public class Game {
     private Integer metacritic;
     @XmlElement
     @XmlJavaTypeAdapter(value = LocalDateAdapter.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
     @XmlElement
     private String price;
